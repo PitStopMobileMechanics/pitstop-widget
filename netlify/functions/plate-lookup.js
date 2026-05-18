@@ -16,7 +16,12 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { plate, state } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const plate = body.plate;
+    const state = body.state;
+
+    console.log('Received request - plate:', plate, 'state:', state);
+    console.log('API key present:', !!process.env.PLATE2VIN_KEY);
 
     if (!plate || !state) {
       return {
@@ -36,7 +41,11 @@ exports.handler = async function(event) {
       body: JSON.stringify({ plate, state })
     });
 
-    const data = await response.json();
+    const text = await response.text();
+    console.log('PlateToVIN raw response:', text);
+    console.log('PlateToVIN status:', response.status);
+
+    const data = JSON.parse(text);
 
     return {
       statusCode: 200,
@@ -48,10 +57,11 @@ exports.handler = async function(event) {
     };
 
   } catch (err) {
+    console.log('Error:', err.message);
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Lookup failed. Please try again.' })
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
