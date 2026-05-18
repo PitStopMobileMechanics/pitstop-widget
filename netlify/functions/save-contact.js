@@ -20,7 +20,7 @@ exports.handler = async function(event) {
     console.log('Saving contact:', data);
 
     const airtableResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/PitStop%20Contacts`,
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/tbleLhysuAfXMIiQg`,
       {
         method: 'POST',
         headers: {
